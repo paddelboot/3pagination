@@ -22,7 +22,10 @@
 
 	border: 1px solid lightgrey;
 }
-.threepagination.classic a:hover,
+.threepagination.classic a:hover {
+        background-color: #ff5700;
+        color: #fff;
+}
 .threepagination.classic span.current {
 	background-color: #999;
 	color: white;
