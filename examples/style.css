@@ -4,6 +4,7 @@
  *
  */
 
+ 
 /* Navigation items: classic style */
 .threepagination.classic {
 	margin: 30px 0px;
@@ -14,7 +15,7 @@
 .threepagination.classic a,
 .threepagination.classic span.current {
 	display: inline-block;
-	padding: 0 3px;
+	padding: 2px 2px 0 3px;
 	margin: 2px -1px;
 
 	text-decoration: none;
@@ -27,6 +28,68 @@
         color: #fff;
 }
 .threepagination.classic span.current {
+	background-color: #999;
+	color: white;
+}
+
+
+/* Navigation items: classic-glow style */
+.threepagination.classic-glow {
+	margin: 30px 0px;
+	width: 100%;
+	padding: 5px;
+	overflow: hidden;
+}
+.threepagination.classic-glow a,
+.threepagination.classic-glow span.current {
+	display: inline-block;
+	padding: 2px 2px 0 3px;
+	margin: 2px -1px;
+
+	text-decoration: none;
+	color: #999;
+
+	border: 1px solid lightgrey;
+}
+.threepagination.classic-glow a:hover {
+        margin: 3px 0px;
+        
+        color: #fff;
+        
+        box-shadow: 0px 0px 3px 1px #ff5700;
+        border: none;
+        background-color: #ff5700;
+}
+.threepagination.classic-glow span.current {
+	background-color: #999;
+	color: white;
+}
+
+
+/* Navigation items: classic-small style */
+.threepagination.classic-small {
+	margin: 30px 0px;
+	width: 100%;
+	padding: 5px;
+	overflow: hidden;
+}
+.threepagination.classic-small a,
+.threepagination.classic-small span.current {
+	display: inline-block;
+	padding: 2px 2px 0 3px;
+	margin: 1px -1px;
+
+        font-size: 11px;
+	text-decoration: none;
+	color: #999;
+
+	border: 1px solid lightgrey;
+}
+.threepagination.classic-small a:hover {
+        background-color: #ff5700;
+        color: #fff;
+}
+.threepagination.classic-small span.current {
 	background-color: #999;
 	color: white;
 }
