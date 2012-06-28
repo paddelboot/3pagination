@@ -3,7 +3,7 @@
 /**
  * Plugin Name: 3pagination
  * Description: Reach any page with no more than 3 clicks
- * Version: 1.2
+ * Version: 1.2b
  * Author: Michael Schröder <ms@ts-webdesign.net>
  * TextDomain: 3pagination
  * DomainPath: /l10n
@@ -68,24 +68,28 @@ if ( !class_exists( 'threepagination' ) ) {
 			// Check placement
 			if ( 'on' == $this->init_var( $settings, 'placement_header_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_header_archive' ) && is_archive() ||
-					'on' == $this->init_var( $settings, 'placement_header_category' ) && is_category() )
+					'on' == $this->init_var( $settings, 'placement_header_category' ) && is_category() ||
+					'on' == $this->init_var( $settings, 'placement_header_search' ) && is_search() )
 					$vars[ 'placement_header' ] = TRUE;
 			
 			if ( 'on' == $this->init_var( $settings, 'placement_footer_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_footer_archive' ) && is_archive() ||
-					'on' == $this->init_var( $settings, 'placement_footer_category' ) && is_category() )
+					'on' == $this->init_var( $settings, 'placement_footer_category' ) && is_category() ||
+					'on' == $this->init_var( $settings, 'placement_footer_search' ) && is_search() )
 					$vars[ 'placement_footer' ] = TRUE;
 			
 			if ( 'on' == $this->init_var( $settings, 'placement_prepend_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_prepend_archive' ) && is_archive() ||
-					'on' == $this->init_var( $settings, 'placement_prepend_category' ) && is_category() ) {
+					'on' == $this->init_var( $settings, 'placement_prepend_category' ) && is_category() ||
+					'on' == $this->init_var( $settings, 'placement_prepend_search' ) && is_search() ) {
 					$vars[ 'placement_prepend' ] = TRUE;
 					$vars[ 'placement_prepend_id' ] = $settings[ 'placement_prepend_id' ];
 					}
 			
 			if ( 'on' == $this->init_var( $settings, 'placement_append_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_append_archive' ) && is_archive() ||
-					'on' == $this->init_var( $settings, 'placement_append_category' ) && is_category() ) {
+					'on' == $this->init_var( $settings, 'placement_append_category' ) && is_category() ||
+					'on' == $this->init_var( $settings, 'placement_append_search' ) && is_search() ) {
 					$vars[ 'placement_append' ] = TRUE;
 					$vars[ 'placement_append_id' ] = $settings[ 'placement_append_id' ];
 					}
@@ -111,7 +115,7 @@ if ( !class_exists( 'threepagination' ) ) {
 		public static function get( $pretty = TRUE, $max_num_pages = FALSE, $labels = TRUE, $css = 'classic' ) {
 
 			global $wp_query, $wp;
-
+			
 			// Get the page count
 			$total_pages = ( FALSE == $max_num_pages ) ? $wp_query->max_num_pages : $max_num_pages;
 
@@ -206,7 +210,7 @@ if ( !class_exists( 'threepagination' ) ) {
 			}
 
 			// Glue together the HTML string
-			$page_string = "<div class='threepagination $css'><div class='threepagination-pages'>" . $page_string . "</div></div>";
+			$page_string = "<div class='threepagination $css nojs'><div class='threepagination-pages'>" . $page_string . "</div></div>";
 
 			// Return string
 			return $page_string;
@@ -241,14 +245,21 @@ if ( !class_exists( 'threepagination' ) ) {
 		 */
 		private static function url( $wp, $i, $pretty ) {
 
+			// Pretty permalinks
 			if ( TRUE == $pretty ) {
 				if ( get_query_var( 'paged' ) )
 					$url = preg_replace( '!(/page/\d+)/?$!', '/page/' . $i, home_url( $wp->request ) );
 				else
 					$url = home_url( $wp->request ) . '/page/' . $i;
 			}
+			// GET parameters
 			else
 				$url = home_url( $wp->request ) . '?paged=' . $i;
+			
+			//This might be a search query, where WP uses GET parameters (who knows why):
+			$params = parse_url( "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+			if ( isset( $params[ 'query' ] ) )
+				$url.= '?' . $params[ 'query' ];
 
 			return $url;
 		}
@@ -282,4 +293,5 @@ if ( !class_exists( 'threepagination' ) ) {
 	// Instantiate class
 	new threepagination();
 }
+
 ?>

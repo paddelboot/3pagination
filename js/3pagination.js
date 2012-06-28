@@ -23,6 +23,8 @@ jQuery.noConflict();
 		 */
 		init : function () {
                     
+                        //jQuery( '.threepagination.nojs' ).hide();
+                    
 			console.log( threepag_vars );
 			console.log( JSON.parse( threepag_vars.html ) );
                         
@@ -45,7 +47,8 @@ jQuery.noConflict();
                             if ( $( '#header' ).length ) {
                                 $( '#header' ).after( html );
                             }
-                            else if ( $( 'header#branding' ).length )
+                            // Twentyeleven (and maybe others) are using custom HTML tags
+                            else if ( $( 'header' ).length )
                                 $( 'header:first' ).after( html )
                         }
                     
@@ -56,7 +59,7 @@ jQuery.noConflict();
                                 $( '#footer' ).before( html );
                             }
                             else if ( $( 'footer' ).length )
-                                $( 'footer_first' ).before( html )
+                                $( 'footer:last' ).before( html )
                         }
                         
                         // Prepend to custom container
