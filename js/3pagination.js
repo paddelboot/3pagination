@@ -22,12 +22,7 @@ jQuery.noConflict();
 		 * @since 0.1a
 		 */
 		init : function () {
-                    
-                        //jQuery( '.threepagination.nojs' ).hide();
-                    
-			console.log( threepag_vars );
-			console.log( JSON.parse( threepag_vars.html ) );
-                        
+                                           
                         this.placement();
 		},
 		

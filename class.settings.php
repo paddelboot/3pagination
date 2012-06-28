@@ -3,8 +3,18 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 
 	class threepagination_settings extends threepagination {
 
+		/**
+		 * Plugin's textdomain string
+		 * 
+		 * @var string $textdomain
+		 */
 		protected $textdomain;
 
+		/**
+		 * Set filters
+		 * 
+		 * @since 0.1 
+		 */
 		public function __construct() {
 
 			// Management page submenu
@@ -53,13 +63,16 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			register_setting( '3pagination_settings', '3pagination_settings', array( $this, 'threepagination_validate' ) );
 
 			// Add the section to reading settings so we can add our
-			// fields to it
+			// fields to it			
+			add_settings_section( '3pagination_preview', __( 'Preview', $this->textdomain ), array( $this, 'section_preview' ), '3pagination' );
 			add_settings_section( '3pagination_labels', __( 'Labels', $this->textdomain ), array( $this, 'section_labels' ), '3pagination' );
 			add_settings_section( '3pagination_placement', __( 'Placement', $this->textdomain ), array( $this, 'section_placement' ), '3pagination' );
 			add_settings_section( '3pagination_css', __( 'DOM & CSS', $this->textdomain ), array( $this, 'section_css' ), '3pagination' );
 
 			// Add the field with the names and function to use for our new
 			// settings, put it in our new section
+			add_settings_field( 'threepagination_preview', __( 'Preview of pagination', $this->textdomain ), array( $this, 'preview' ), '3pagination', '3pagination_preview' );
+
 			add_settings_field( 'threepagination_labels_show', __( 'Show labels', $this->textdomain ), array( $this, 'labels_show' ), '3pagination', '3pagination_labels' );
 			add_settings_field( 'threepagination_labels_previous', __( 'Previous page', $this->textdomain ), array( $this, 'labels_previous' ), '3pagination', '3pagination_labels' );
 			add_settings_field( 'threepagination_labels_next', __( 'Next page', $this->textdomain ), array( $this, 'labels_next' ), '3pagination', '3pagination_labels' );
@@ -75,6 +88,17 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			add_settings_field( 'threepagination_placement_append', __( 'Append to', $this->textdomain ), array( $this, 'placement_append' ), '3pagination', '3pagination_placement' );		
 
 		}
+		
+		/** 
+		 * Head of "preview" section
+		 * 
+		 * @since 0.1 
+		 */
+		public function section_preview() {	
+			?>
+			<!--<span class="description"><?php _e( 'Preview of pagination' ); ?></span>-->
+			<?php			
+		}
 
 		/**
 		 * Head of "labels" section
@@ -87,6 +111,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 		
+		/**
+		 * Head of "CSS" section
+		 * 
+		 * @since 0.1 
+		 */
 		public function section_css() {
 			?>
 			<span class="description"><?php _e( 'Set your stylesheet for the pagination' ); ?></span>
@@ -109,7 +138,22 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			</p>
 			<?php
 		}
+		
+		/**
+		 * Display a preview of the pagination
+		 * 
+		 * @since 0.1 
+		 */
+		public function preview() {
+			set_query_var( 'paged', 3 );
+			parent::draw( TRUE, 999 );
+		}
 
+		/**
+		 * Show pagination labels or not
+		 * 
+		 * @since 0.1 
+		 */
 		public function labels_show() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -118,6 +162,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 
+		/**
+		 * Set 'previous page' label
+		 * 
+		 * @since 0.1 
+		 */
 		public function labels_previous() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -126,6 +175,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 
+		/**
+		 * Set 'next page' label
+		 * 
+		 * @since 0.1 
+		 */
 		public function labels_next() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -134,6 +188,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 
+		/**
+		 * Set 'first page' label
+		 * 
+		 * @since 0.1 
+		 */
 		public function labels_first() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -142,6 +201,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 
+		/**
+		 * Set 'last page' label
+		 * 
+		 * @since 0.1 
+		 */
 		public function labels_last() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -150,6 +214,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 		
+		/**
+		 * Set CSS class
+		 * 
+		 * @since 0.1 
+		 */
 		public function css_class() {
 			
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -160,6 +229,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 				<?php	
 		}
 		
+		/**
+		 * Inject below header
+		 * 
+		 * @since 0.1
+		 */
 		public function placement_header() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -175,6 +249,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 		
+		/**
+		 * Inject above footer
+		 * 
+		 * @since 0.1 
+		 */
 		public function placement_footer() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -190,6 +269,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 		
+		/**
+		 * Prepend to custom container
+		 * 
+		 * @since 0.1 
+		 */
 		public function placement_prepend() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -207,6 +291,11 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 		
+		/**
+		 * Append to custom container
+		 * 
+		 * @since 0.1 
+		 */
 		public function placement_append() {
 
 			$settings = get_option( '3pagination_settings', TRUE );
@@ -226,9 +315,13 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 
 
 		/**
+		 * Validate user input
+		 * 
 		 * @TODO add_settings_error()
 		 * @param type $data
 		 * @return type 
+		 * 
+		 * @since 0.1
 		 */
 		public function threepagination_validate( $data ) {
 
@@ -281,7 +374,7 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 		 *
 		 * @uses unregister_setting, delete_option
 		 * @access public
-		 * @since 0.0.1
+		 * @since 0.1
 		 * @return void
 		 */
 		public function unregister_settings() {

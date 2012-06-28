@@ -8,13 +8,6 @@
  * TextDomain: 3pagination
  * DomainPath: /l10n
  */
-// Load example CSS
-add_action( 'wp_enqueue_scripts', 'load_example_css' );
-
-// Example callback function
-function load_example_css() {
-	wp_enqueue_style( 'threepagination-css', plugins_url( 'examples/style.css', __FILE__ ) );
-}
 
 if ( !class_exists( 'threepagination' ) ) {
 
@@ -41,24 +34,58 @@ if ( !class_exists( 'threepagination' ) ) {
 			add_filter( 'admin_init', array( $this, 'set_textdomain' ), 1 );
 			
 			add_filter( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
+			add_filter( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 		}
 		
+		/**
+		 * Include files
+		 * 
+		 * @since 1.2b 
+		 */
 		private function include_files() {
 			
 			require_once( plugin_dir_path( __FILE__) . 'class.settings.php' );
 		}
 
+		/**
+		 * Set plugin's textdomain
+		 * 
+		 * @since 1.2b 
+		 */
 		public function set_textdomain() {
 
 			$this->textdomain = '3pagination';
 		}
 		
+		/**
+		 * Load admin scripts
+		 * 
+		 * @since 1.2b 
+		 */
+		public function admin_scripts() {
+			
+			wp_enqueue_style( 'threepagination-css', plugins_url( 'examples/style.css', __FILE__ ) );
+		}
+		
+		/**
+		 * Load frontend scripts
+		 * 
+		 * @since 1.2b
+		 */
 		public function frontend_scripts() {
+			
+			wp_enqueue_style( 'threepagination-css', plugins_url( 'examples/style.css', __FILE__ ) );
 			
 			wp_enqueue_script( '3pagination-js', plugins_url( '/js/3pagination.js', __FILE__ ), array( 'jquery', 'json2' ) );
 			wp_localize_script( '3pagination-js', 'threepag_vars', $this->frontend_vars() );				
 		}
 		
+		/**
+		 * Set frontend vars
+		 * 
+		 * @return type 
+		 * @since 1.2b
+		 */
 		private function frontend_vars() {
 			
 			$vars = array();
@@ -122,6 +149,9 @@ if ( !class_exists( 'threepagination' ) ) {
 			// No need for navi
 			if ( 1 == $total_pages )
 				return;
+			
+			if ( 999 < $total_pages )
+				$total_pages = 999;
 
 			// Get currently visited page 
 			$on_page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
@@ -192,6 +222,8 @@ if ( !class_exists( 'threepagination' ) ) {
 			}
 			
 			$settings = get_option( '3pagination_settings' );
+			
+			$css = isset( $settings[ 'css_class' ] ) ? $settings[ 'css_class' ] : $css; 
 
 			// Navigation labels
 			if ( FALSE !== $labels && 'on' == $settings[ 'labels_show' ] ) {
@@ -210,7 +242,7 @@ if ( !class_exists( 'threepagination' ) ) {
 			}
 
 			// Glue together the HTML string
-			$page_string = "<div class='threepagination $css nojs'><div class='threepagination-pages'>" . $page_string . "</div></div>";
+			$page_string = "<div class='threepagination $css'><div class='threepagination-pages'>" . $page_string . "</div></div>";
 
 			// Return string
 			return $page_string;
