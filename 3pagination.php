@@ -3,16 +3,15 @@
 /**
  * Plugin Name: 3pagination
  * Description: Reach any page with no more than 3 clicks
- * Version: 1.2b
+ * Version: 1.3b
  * Author: Michael Schröder <ms@ts-webdesign.net>
  * TextDomain: 3pagination
- * DomainPath: /l10n
+ * DomainPath: /languages
  */
 if ( !class_exists( 'threepagination' ) ) {
 
 	if ( function_exists( 'add_filter' ) )
 		add_filter( 'plugins_loaded', array( 'threepagination', 'get_object' ) );
-
 
 	class threepagination {
 
@@ -22,14 +21,14 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @var string 
 		 */
 		protected $textdomain;
-		
+
 		/**
 		 * Class object
 		 * 
 		 * @var object 
 		 */
 		static $_object;
-		
+
 		/**
 		 * Create class object
 		 *
@@ -37,7 +36,7 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @return object $_object
 		 * @since 0.1a
 		 */
-		public static function get_object () {
+		public static function get_object() {
 
 			if ( NULL == self::$_object ) {
 				self::$_object = new self;
@@ -51,7 +50,7 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @since 1.1
 		 */
 		public function __construct() {
-			
+
 			// Get files
 			$this->include_files();
 
@@ -61,7 +60,6 @@ if ( !class_exists( 'threepagination' ) ) {
 
 			add_filter( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
 			add_filter( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
-			
 		}
 
 		/**
@@ -80,12 +78,12 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @since 1.2b 
 		 */
 		public function set_textdomain() {
-			
+
 			$this->textdomain = '3pagination';
 		}
-		
+
 		public function load_textdomain() {
-			
+
 			load_plugin_textdomain( $this->textdomain, FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 		}
 
@@ -175,7 +173,13 @@ if ( !class_exists( 'threepagination' ) ) {
 
 			global $wp_query, $wp;
 
-			// Get the page count
+			// Get global settings
+			$settings = get_option( '3pagination_settings' );
+
+			// Permalink structure
+			$pretty = ( 'on' == $settings[ 'other_pretty' ] ) ? TRUE : FALSE;
+
+			// Get the page count. 
 			$total_pages = ( FALSE == $max_num_pages ) ? $wp_query->max_num_pages : $max_num_pages;
 
 			// No need for navi
@@ -183,8 +187,8 @@ if ( !class_exists( 'threepagination' ) ) {
 				return;
 
 			// For now, 3pagination supports up to 999 pages only
-			if ( 999 < $total_pages )
-				$total_pages = 999;
+			if ( intval( $settings[ 'other_maxnumpages' ] ) < $total_pages )
+				$total_pages = intval( $settings[ 'other_maxnumpages' ] );
 
 			// Get currently visited page 
 			$on_page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
@@ -254,8 +258,6 @@ if ( !class_exists( 'threepagination' ) ) {
 					break;
 			}
 
-			$settings = get_option( '3pagination_settings' );
-
 			$css = isset( $settings[ 'css_class' ] ) ? $settings[ 'css_class' ] : $css;
 
 			// Navigation labels
@@ -303,6 +305,8 @@ if ( !class_exists( 'threepagination' ) ) {
 		/**
 		 * Create link href
 		 * 
+		 * @TODO: _always_ append possibly existing URL parameters
+		 * 
 		 * @param object $wp | WP object
 		 * @param int $i | current element
 		 * @param bool $pretty | pretty permalink structure. TRUE or FALSE, defaults to TRUE
@@ -310,21 +314,29 @@ if ( !class_exists( 'threepagination' ) ) {
 		 */
 		private static function url( $wp, $i, $pretty ) {
 
-			// Pretty permalinks
+			// Does the current URL have any parameters? If so,
+			// we will always append them to the new link url, even
+			// if pretty URLs = on
+			$base_url = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
+			if ( strpos( $base_url, '=' ) ) {
+				// has at least one param
+				$params = parse_url( $base_url );
+			}
+
+			// Pretty URLs
 			if ( TRUE == $pretty ) {
 				if ( get_query_var( 'paged' ) )
 					$url = preg_replace( '!(/page/\d+)/?$!', '/page/' . $i, home_url( $wp->request ) );
 				else
 					$url = home_url( $wp->request ) . '/page/' . $i;
 			}
-			// GET parameters
-			else
+			// Default URLs
+			else 
 				$url = home_url( $wp->request ) . '?paged=' . $i;
 
-			//This might be a search query, where WP uses GET parameters (who knows why):
-			$params = parse_url( 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ] );
+			//Append existing URL params
 			if ( isset( $params[ 'query' ] ) )
-				$url.= '?' . $params[ 'query' ];
+				$url.= ( TRUE == $pretty ) ? '?' . $params[ 'query' ] : '&' . $params[ 'query' ];
 
 			return $url;
 		}

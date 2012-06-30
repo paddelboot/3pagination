@@ -1,4 +1,12 @@
 <?php
+/**
+ * @TODO: 
+ * - Set placement template globally, not for each option
+ * - Pretty URLs or not
+ * - Max no. of pages
+ * 
+ *  
+ */
 if ( !class_exists( 'threepagination_settings' ) ) {
 
 	class threepagination_settings extends threepagination {
@@ -70,6 +78,7 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			add_settings_section( '3pagination_labels', __( 'Labels', parent::$_object->textdomain ), array( $this, 'section_labels' ), '3pagination' );
 			add_settings_section( '3pagination_placement', __( 'Placement', parent::$_object->textdomain ), array( $this, 'section_placement' ), '3pagination' );
 			add_settings_section( '3pagination_css', __( 'DOM & CSS', parent::$_object->textdomain ), array( $this, 'section_css' ), '3pagination' );
+			add_settings_section( '3pagination_other', __( 'Other options', parent::$_object->textdomain ), array( $this, 'section_other' ), '3pagination' );
 
 			// Add the field with the names and function to use for our new
 			// settings, put it in our new section
@@ -89,6 +98,9 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			add_settings_field( 'threepagination_placement_prepend', __( 'Prepend to', parent::$_object->textdomain ), array( $this, 'placement_prepend' ), '3pagination', '3pagination_placement' );		
 			add_settings_field( 'threepagination_placement_append', __( 'Append to', parent::$_object->textdomain ), array( $this, 'placement_append' ), '3pagination', '3pagination_placement' );		
 
+			add_settings_field( 'threepagination_other_maxnumpages', __( 'Max no. of pages', parent::$_object->textdomain ), array( $this, 'other_maxnumpages' ), '3pagination', '3pagination_other' );		
+			add_settings_field( 'threepagination_other_pretty', __( 'Pretty URLs enabled?', parent::$_object->textdomain ), array( $this, 'other_pretty' ), '3pagination', '3pagination_other' );
+			
 		}
 		
 		/** 
@@ -123,6 +135,17 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<span class="description"><?php _e( 'Set your stylesheet for the pagination', parent::$_object->textdomain ); ?></span>
 			<?php
 		}
+		
+		/**
+		 * Head of "Other options" section
+		 * 
+		 * @since 0.1 
+		 */
+		public function section_other() {
+			?>
+			<span class="description"><?php _e( '', parent::$_object->textdomain ); ?></span>
+			<?php
+		}		
 		
 		/**
 		 * Head of "placement" section
@@ -217,21 +240,6 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 		}
 		
 		/**
-		 * Set CSS class
-		 * 
-		 * @since 0.1 
-		 */
-		public function css_class() {
-			
-			$settings = get_option( '3pagination_settings', TRUE );
-			?>
-			<input type="text" name="3pagination_settings[css_class]" value="<?php echo $this->init_var( $settings, 'css_class', 'classic', TRUE ); ?>" />
-			<br />
-			<span class="description">Default classes: classic, classic-glow, classic-small</span>
-				<?php	
-		}
-		
-		/**
 		 * Inject below header
 		 * 
 		 * @since 0.1
@@ -315,7 +323,40 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			<?php
 		}
 
-
+		/**
+		 * Set CSS class
+		 * 
+		 * @since 0.1 
+		 */
+		public function css_class() {
+			
+			$settings = get_option( '3pagination_settings', TRUE );
+			?>
+			<input type="text" name="3pagination_settings[css_class]" value="<?php echo $this->init_var( $settings, 'css_class', 'classic', TRUE ); ?>" />
+			<br />
+			<span class="description">Default classes: classic, classic-glow, classic-small</span>
+				<?php	
+		}
+		
+		public function other_maxnumpages() {
+			
+			$settings = get_option( '3pagination_settings', TRUE );
+			?>
+			<input type="text" name="3pagination_settings[other_maxnumpages]" value="<?php echo $this->init_var( $settings, 'other_maxnumpages', '999', TRUE ); ?>" />
+			<br />
+			<span class="description">Limit to a maximum number of pagelinks</span>
+				<?php	
+		}
+		
+		public function other_pretty() {
+			
+			$settings = get_option( '3pagination_settings', TRUE );
+					
+			?>
+			<input type="checkbox" name="3pagination_settings[other_pretty]" <?php checked( $this->init_var( $settings, 'other_pretty', 'on' ), 'on' ); ?> />
+			<?php	
+		}
+		
 		/**
 		 * Validate user input
 		 * 
@@ -326,7 +367,7 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 		 * @since 0.1
 		 */
 		public function threepagination_validate( $data ) {
-
+			
 			$settings = get_option( '3pagination_settings' );
 
 			$settings[ 'labels_show' ] = esc_attr( $data[ 'labels_show' ] );
@@ -359,14 +400,8 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			$settings[ 'placement_append_search' ] = esc_attr( $data[ 'placement_append_search' ] );
 			$settings[ 'placement_append_category' ] = esc_attr( $data[ 'placement_append_category' ] );
 			
-			
-			// Set this option to determine whether to display serverside fallback pagination
-			foreach( $settings AS $key => $value ) {
-				if ( 0 === strpos( $key, 'placement_' ) && ! empty( $value ) ) { 
-						$settings[ 'hide_serverside' ] = TRUE;
-						break;	
-				}
-			}
+			$settings[ 'other_maxnumpages' ] = intval( $data[ 'other_maxnumpages' ] );
+			$settings[ 'other_pretty' ] = esc_attr( $data[ 'other_pretty' ] );
 
 			return $settings;
 		}
