@@ -1,0 +1,180 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 3pagination v1.2b\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2012-06-29 19:09:18+0000\n"
+"Last-Translator: admin <admin@localhost.de>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: class.settings.php:34
+#@ 3pagination
+msgid "3pagination Configuration"
+msgstr "3pagination Konfiguration"
+
+#: class.settings.php:41
+#@ 3pagination
+msgid "3pagination Settings"
+msgstr "3pagination Einstellungen"
+
+#: class.settings.php:47
+#@ 3pagination
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: class.settings.php:69
+#@ 3pagination
+msgid "Preview"
+msgstr "Vorschau"
+
+#: class.settings.php:70
+#@ 3pagination
+msgid "Labels"
+msgstr "Navigationselemente"
+
+#: class.settings.php:71
+#@ 3pagination
+msgid "Placement"
+msgstr "Platzierung"
+
+#: class.settings.php:72
+#@ 3pagination
+msgid "DOM & CSS"
+msgstr "DOM & CSS"
+
+#: class.settings.php:76
+#: class.settings.php:101
+#@ 3pagination
+msgid "Preview of pagination"
+msgstr "Vorschau der Paginierung"
+
+#: class.settings.php:78
+#@ 3pagination
+msgid "Show labels"
+msgstr "Navigationselemente einblenden"
+
+#: class.settings.php:79
+#@ 3pagination
+msgid "Previous page"
+msgstr "Vorherige Seite"
+
+#: class.settings.php:80
+#@ 3pagination
+msgid "Next page"
+msgstr "Nächste Seite"
+
+#: class.settings.php:81
+#@ 3pagination
+msgid "First page"
+msgstr "Erste Seite"
+
+#: class.settings.php:82
+#@ 3pagination
+msgid "Last page"
+msgstr "Letzte Seite"
+
+#: class.settings.php:84
+#@ 3pagination
+msgid "Set CSS class"
+msgstr "CSS-Klasse definieren"
+
+#: class.settings.php:86
+#@ 3pagination
+msgid "Inject below header"
+msgstr "Unter Kopfbereich einfügen"
+
+#: class.settings.php:87
+#@ 3pagination
+msgid "Inject above footer"
+msgstr "Über Fußbereich einfügen"
+
+#: class.settings.php:89
+#@ 3pagination
+msgid "Prepend to"
+msgstr "Voranstellen"
+
+#: class.settings.php:90
+#@ 3pagination
+msgid "Append to"
+msgstr "Anfügen"
+
+#: class.settings.php:112
+#@ 3pagination
+msgid "Define the navigation labels characters"
+msgstr "Gib die Zeichen für die Navigationselemente an"
+
+#: class.settings.php:123
+#@ 3pagination
+msgid "Set your stylesheet for the pagination"
+msgstr "Definiere Dein Stylesheet für die Paginierung"
+
+#: class.settings.php:135
+#@ 3pagination
+msgid "<b>Inject:</b> You can \"inject\" the navigation bar below the header or above the footer div. Your theme needs to have an according HTML structure (which most WordPress themes do)."
+msgstr "<b>Einfügen:</b> Du kannst die Paginierung unter dem Kopfbereich (Header) oder über dem Fußbereich (Footer) Deiner Seite einblenden lassen. Dein Theme muss eine entsprechende HTML-Struktur aufweisen, was bei den meisten gängigen Themes der Fall ist."
+
+#: class.settings.php:137
+#@ 3pagination
+msgid "<b>Append/Prepend:</b> You can specifiy a container into which the pagination will be prepended/appended. Write it CSS-style, i.e. #mycontainer"
+msgstr "<b>Voranstellen/Anfügen:</b> Du kannst einen Container bestimmen, in welchen die Paginierung vorangestellt oder angefügt wird. Notiere es im CSS-Stil, beispielsweise #mycontainer"
+
+#: class.settings.php:139
+#@ 3pagination
+msgid "<b>Note:</b> If you want your site to degrade gracefully, you should additionaly hardcode the pagination function into your theme files: <input style=\"background-color:lightgrey\" size=\"45\" type=\"text\" value=\"<noscript><?php threepagination::draw(); ?></noscript>\""
+msgstr "<b>Anmerkung:</b> Soll die Paginierung auch bei Benutzern mit ausgeschaltetem Javascript funktionieren, so musst Du die Paginierungsfunktion in Deine Theme-Dateien einbinden: <input style=\"background-color:lightgrey\" size=\"45\" type=\"text\" value=\"<noscript><?php threepagination::draw(); ?></noscript>\""
+
+#: class.settings.php:244
+#: class.settings.php:264
+#: class.settings.php:286
+#: class.settings.php:308
+#@ 3pagination
+msgid "Index pages"
+msgstr "Index-Seiten"
+
+#: class.settings.php:246
+#: class.settings.php:266
+#: class.settings.php:288
+#: class.settings.php:310
+#@ 3pagination
+msgid "Archive pages"
+msgstr "Archivseiten"
+
+#: class.settings.php:248
+#: class.settings.php:268
+#: class.settings.php:290
+#: class.settings.php:312
+#@ 3pagination
+msgid "Category pages"
+msgstr "Kategorieseiten"
+
+#: class.settings.php:250
+#: class.settings.php:270
+#: class.settings.php:292
+#: class.settings.php:314
+#@ 3pagination
+msgid "Search pages"
+msgstr "Suchseiten"
+
+#: class.settings.php:284
+#@ 3pagination
+msgid "in"
+msgstr "in"
+
+#: class.settings.php:306
+#@ 3pagination
+msgctxt "Zeige Pagination \"in\" diesen Seiten an"
+msgid "in"
+msgstr "in"
+

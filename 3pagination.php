@@ -8,8 +8,11 @@
  * TextDomain: 3pagination
  * DomainPath: /l10n
  */
-
 if ( !class_exists( 'threepagination' ) ) {
+
+	if ( function_exists( 'add_filter' ) )
+		add_filter( 'plugins_loaded', array( 'threepagination', 'get_object' ) );
+
 
 	class threepagination {
 
@@ -19,6 +22,28 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @var string 
 		 */
 		protected $textdomain;
+		
+		/**
+		 * Class object
+		 * 
+		 * @var object 
+		 */
+		static $_object;
+		
+		/**
+		 * Create class object
+		 *
+		 * @access public
+		 * @return object $_object
+		 * @since 0.1a
+		 */
+		public static function get_object () {
+
+			if ( NULL == self::$_object ) {
+				self::$_object = new self;
+			}
+			return self::$_object;
+		}
 
 		/**
 		 * Class init 
@@ -31,20 +56,22 @@ if ( !class_exists( 'threepagination' ) ) {
 			$this->include_files();
 
 			// Set textdomain string
-			add_filter( 'admin_init', array( $this, 'set_textdomain' ), 1 );
-			
+			add_filter( 'init', array( $this, 'set_textdomain' ), 1 );
+			add_filter( 'init', array( $this, 'load_textdomain' ), 2 );
+
 			add_filter( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
 			add_filter( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+			
 		}
-		
+
 		/**
 		 * Include files
 		 * 
 		 * @since 1.2b 
 		 */
-		private function include_files() {
-			
-			require_once( plugin_dir_path( __FILE__) . 'class.settings.php' );
+		public function include_files() {
+
+			require_once( plugin_dir_path( __FILE__ ) . 'class.settings.php' );
 		}
 
 		/**
@@ -53,33 +80,38 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @since 1.2b 
 		 */
 		public function set_textdomain() {
-
+			
 			$this->textdomain = '3pagination';
 		}
 		
+		public function load_textdomain() {
+			
+			load_plugin_textdomain( $this->textdomain, FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		}
+
 		/**
 		 * Load admin scripts
 		 * 
 		 * @since 1.2b 
 		 */
 		public function admin_scripts() {
-			
+
 			wp_enqueue_style( 'threepagination-css', plugins_url( 'examples/style.css', __FILE__ ) );
 		}
-		
+
 		/**
 		 * Load frontend scripts
 		 * 
 		 * @since 1.2b
 		 */
 		public function frontend_scripts() {
-			
+
 			wp_enqueue_style( 'threepagination-css', plugins_url( 'examples/style.css', __FILE__ ) );
-			
+
 			wp_enqueue_script( '3pagination-js', plugins_url( '/js/3pagination.js', __FILE__ ), array( 'jquery', 'json2' ) );
-			wp_localize_script( '3pagination-js', 'threepag_vars', $this->frontend_vars() );				
+			wp_localize_script( '3pagination-js', 'threepag_vars', $this->frontend_vars() );
 		}
-		
+
 		/**
 		 * Set frontend vars
 		 * 
@@ -87,43 +119,43 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @since 1.2b
 		 */
 		private function frontend_vars() {
-			
-			$vars = array();
-			
+
+			$vars = array( );
+
 			$settings = get_option( '3pagination_settings' );
-			
+
 			// Check placement
 			if ( 'on' == $this->init_var( $settings, 'placement_header_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_header_archive' ) && is_archive() ||
 					'on' == $this->init_var( $settings, 'placement_header_category' ) && is_category() ||
 					'on' == $this->init_var( $settings, 'placement_header_search' ) && is_search() )
-					$vars[ 'placement_header' ] = TRUE;
-			
+				$vars[ 'placement_header' ] = TRUE;
+
 			if ( 'on' == $this->init_var( $settings, 'placement_footer_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_footer_archive' ) && is_archive() ||
 					'on' == $this->init_var( $settings, 'placement_footer_category' ) && is_category() ||
 					'on' == $this->init_var( $settings, 'placement_footer_search' ) && is_search() )
-					$vars[ 'placement_footer' ] = TRUE;
-			
+				$vars[ 'placement_footer' ] = TRUE;
+
 			if ( 'on' == $this->init_var( $settings, 'placement_prepend_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_prepend_archive' ) && is_archive() ||
 					'on' == $this->init_var( $settings, 'placement_prepend_category' ) && is_category() ||
 					'on' == $this->init_var( $settings, 'placement_prepend_search' ) && is_search() ) {
-					$vars[ 'placement_prepend' ] = TRUE;
-					$vars[ 'placement_prepend_id' ] = $settings[ 'placement_prepend_id' ];
-					}
-			
+				$vars[ 'placement_prepend' ] = TRUE;
+				$vars[ 'placement_prepend_id' ] = $settings[ 'placement_prepend_id' ];
+			}
+
 			if ( 'on' == $this->init_var( $settings, 'placement_append_index' ) && is_home() ||
 					'on' == $this->init_var( $settings, 'placement_append_archive' ) && is_archive() ||
 					'on' == $this->init_var( $settings, 'placement_append_category' ) && is_category() ||
 					'on' == $this->init_var( $settings, 'placement_append_search' ) && is_search() ) {
-					$vars[ 'placement_append' ] = TRUE;
-					$vars[ 'placement_append_id' ] = $settings[ 'placement_append_id' ];
-					}
-			
+				$vars[ 'placement_append' ] = TRUE;
+				$vars[ 'placement_append_id' ] = $settings[ 'placement_append_id' ];
+			}
+
 			// HTML output
 			$vars[ 'html' ] = json_encode( self::get() );
-			
+
 			return $vars;
 		}
 
@@ -142,14 +174,15 @@ if ( !class_exists( 'threepagination' ) ) {
 		public static function get( $pretty = TRUE, $max_num_pages = FALSE, $labels = TRUE, $css = 'classic' ) {
 
 			global $wp_query, $wp;
-			
+
 			// Get the page count
 			$total_pages = ( FALSE == $max_num_pages ) ? $wp_query->max_num_pages : $max_num_pages;
 
 			// No need for navi
 			if ( 1 == $total_pages )
 				return;
-			
+
+			// For now, 3pagination supports up to 999 pages only
 			if ( 999 < $total_pages )
 				$total_pages = 999;
 
@@ -220,14 +253,14 @@ if ( !class_exists( 'threepagination' ) ) {
 					}
 					break;
 			}
-			
+
 			$settings = get_option( '3pagination_settings' );
-			
-			$css = isset( $settings[ 'css_class' ] ) ? $settings[ 'css_class' ] : $css; 
+
+			$css = isset( $settings[ 'css_class' ] ) ? $settings[ 'css_class' ] : $css;
 
 			// Navigation labels
 			if ( FALSE !== $labels && 'on' == $settings[ 'labels_show' ] ) {
-							
+
 				if ( $on_page > 1 ) {
 					$i = $on_page - 1;
 					$page_string = "<a class='page-numbers label-first' href='" . self::url( $wp, 1, $pretty ) . "'>" . self::init_var( $settings, 'labels_first', '&laquo;', TRUE ) . "</a>&nbsp;" . $page_string;
@@ -287,9 +320,9 @@ if ( !class_exists( 'threepagination' ) ) {
 			// GET parameters
 			else
 				$url = home_url( $wp->request ) . '?paged=' . $i;
-			
+
 			//This might be a search query, where WP uses GET parameters (who knows why):
-			$params = parse_url( "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+			$params = parse_url( 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ] );
 			if ( isset( $params[ 'query' ] ) )
 				$url.= '?' . $params[ 'query' ];
 
@@ -312,7 +345,7 @@ if ( !class_exists( 'threepagination' ) ) {
 		 * @return	var $var[ $index ] | the value of $var[ $index ]
 		 * @since	0.1a
 		 */
-		public function init_var ( $var, $index, $default = FALSE, $override_set_empty = FALSE ) {
+		public function init_var( $var, $index, $default = FALSE, $override_set_empty = FALSE ) {
 
 			// is the $index of $var not yet set or (optional) set but empty?
 			if ( !isset( $var[ $index ] ) || ( TRUE == $override_set_empty && empty( $var[ $index ] ) ) )
@@ -320,10 +353,8 @@ if ( !class_exists( 'threepagination' ) ) {
 
 			return $var[ $index ];
 		}
+
 	}
 
-	// Instantiate class
-	new threepagination();
 }
-
 ?>
