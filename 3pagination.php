@@ -10,8 +10,13 @@
  */
 if ( !class_exists( 'threepagination' ) ) {
 
-	if ( function_exists( 'add_filter' ) )
+	if ( function_exists( 'add_filter' ) ) {
+		
 		add_filter( 'plugins_loaded', array( 'threepagination', 'get_object' ) );
+		
+		// Upon deactivation
+		register_deactivation_hook( __FILE__, array( 'threepagination', 'deactivate' ) );
+	}
 
 	class threepagination {
 
@@ -314,15 +319,6 @@ if ( !class_exists( 'threepagination' ) ) {
 		 */
 		private static function url( $wp, $i, $pretty ) {
 
-			// Does the current URL have any parameters? If so,
-			// we will always append them to the new link url, even
-			// if pretty URLs = on
-			$base_url = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
-			if ( strpos( $base_url, '=' ) ) {
-				// has at least one param
-				$params = parse_url( $base_url );
-			}
-
 			// Pretty URLs
 			if ( TRUE == $pretty ) {
 				if ( get_query_var( 'paged' ) )
@@ -334,9 +330,15 @@ if ( !class_exists( 'threepagination' ) ) {
 			else 
 				$url = home_url( $wp->request ) . '?paged=' . $i;
 
-			//Append existing URL params
-			if ( isset( $params[ 'query' ] ) )
+			// Does the current URL have any parameters? If so,
+			// we will always append them to the new link url, even
+			// if pretty URLs = on
+			$base_url = 'http://' . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
+			if ( strpos( $base_url, '=' ) ) {
+				// has at least one param
+				$params = parse_url( $base_url );
 				$url.= ( TRUE == $pretty ) ? '?' . $params[ 'query' ] : '&' . $params[ 'query' ];
+			}			
 
 			return $url;
 		}
@@ -364,6 +366,16 @@ if ( !class_exists( 'threepagination' ) ) {
 				$var[ $index ] = ( FALSE == $default ) ? FALSE : $default;
 
 			return $var[ $index ];
+		}
+		
+		/**
+		 * Cleanup
+		 * 
+		 * @since 1.3b 
+		 */
+		public static function deactivate() {
+			
+			delete_option( '3pagination_settings' );
 		}
 
 	}
