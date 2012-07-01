@@ -370,7 +370,7 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			?>
 			<input type="text" name="3pagination_settings[css_class]" value="<?php echo $this->init_var( $settings, 'css_class', 'classic', TRUE ); ?>" />
 			<br />
-			<span class="description">Default classes: classic, classic-glow, classic-small</span>
+			<span class="description"><?php _e( 'Default classes: classic, classic-glow, classic-small', parent::$_object->textdomain ); ?></span>
 			<?php
 		}
 
@@ -380,7 +380,7 @@ if ( !class_exists( 'threepagination_settings' ) ) {
 			?>
 			<input type="text" name="3pagination_settings[other_maxnumpages]" value="<?php echo $this->init_var( $settings, 'other_maxnumpages', '999', TRUE ); ?>" />
 			<br />
-			<span class="description">Limit to a maximum number of pagelinks</span>
+			<span class="description"><?php _e( 'Limit to a maximum number of pagelinks', parent::$_object->textdomain ); ?></span>
 			<?php
 		}
 
