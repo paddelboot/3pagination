@@ -3,11 +3,19 @@ Contributors: paddelboot
 Tags: pagination
 Requires at least: 3.3.2
 Tested up to: 3.4.1
+<<<<<<< HEAD
 Stable tag: 1.3.2b
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Navigate to any page between 1 and 999 with no more than 3 clicks - no need to modify theme files.
+=======
+Stable tag: 1.2b
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+Navigate to any page between 1 and 999 with no more than 3 clicks.
+>>>>>>> 4cb81d38e0a5066b7c278026a64fce79cd5e3ca8
 
 == Description ==
 

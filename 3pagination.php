@@ -14,7 +14,7 @@ if ( !class_exists( 'threepagination' ) ) {
 		
 		add_filter( 'plugins_loaded', array( 'threepagination', 'get_object' ) );
 		
-		// Upon deactivation
+		// Upon uninstall
 		register_uninstall_hook( __FILE__, array( 'threepagination', 'uninstall' ) );
 	}
 
@@ -118,8 +118,11 @@ if ( !class_exists( 'threepagination' ) ) {
 		/**
 		 * Set frontend vars
 		 * 
+<<<<<<< HEAD
 		 * @TODO: Pages, Custom post types?
 		 * 
+=======
+>>>>>>> 4cb81d38e0a5066b7c278026a64fce79cd5e3ca8
 		 * @return type 
 		 * @since 1.2b
 		 */
@@ -311,6 +314,7 @@ if ( !class_exists( 'threepagination' ) ) {
 		public static function draw( $pretty = TRUE, $max_num_pages = FALSE, $labels = TRUE, $css = 'classic', $wp_query = FALSE ) {
 
 			echo self::get( $pretty, $max_num_pages, $labels, $css, $wp_query );
+
 		}
 
 		/**
